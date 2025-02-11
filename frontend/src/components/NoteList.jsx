@@ -1,7 +1,8 @@
 import { useState } from "react";
 import AddTextNote from "./AddTextNote";
 import AddAudioNote from "./AddAudioNote";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 function NoteList() {
   const [notes, setNotes] = useState([]);
   const [showTextModal, setShowTextModal] = useState(false);
@@ -9,6 +10,9 @@ function NoteList() {
 
   const handleAddNote = (newNote) => {
     setNotes([...notes, newNote]);
+  };
+  const handleDelete = (index) => {
+    setNotes(notes.filter((_, i) => i !== index));
   };
 
   return (
@@ -33,16 +37,15 @@ function NoteList() {
       </div>
 
       <div className="space-y-4">
-     
         {notes.map((note, index) => (
           <div
             key={index}
             className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex flex-col">
+            <div className="flex justify-between mb-2">
+              <div className="flex justify-between w-full">
                 <span className="text-sm font-medium text-gray-500">
-                  Added via {note.type.toUpperCase()}
+                  Added via {note.type}
                 </span>
                 <span className="text-xs text-gray-400">
                   {new Date(note.date).toLocaleString("en-US", {
@@ -58,9 +61,16 @@ function NoteList() {
                 </span>
               </div>
             </div>
-            <p className="text-gray-800 whitespace-pre-wrap mt-2">
+            <p className="text-gray-800  text-[22px] whitespace-pre-wrap mt-2">
               {note.content}
             </p>
+
+            <button
+              onClick={() => handleDelete(index)}
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
           </div>
         ))}
         {notes.length === 0 && (
