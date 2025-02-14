@@ -70,6 +70,7 @@ const AddAudioNote = ({ onClose, onAddNote }) => {
         content: content.trim(),
         date: new Date().toISOString(),
       });
+      // console.log(content.trim());
       onClose();
     }
   };

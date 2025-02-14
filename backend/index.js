@@ -2,10 +2,14 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 require("./Models/db");
-app.use(cors());
 
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use("/tasks", require("./Routes/TaskRoutes"));
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

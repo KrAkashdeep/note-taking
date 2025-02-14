@@ -3,6 +3,7 @@ import AddTextNote from "./AddTextNote";
 import AddAudioNote from "./AddAudioNote";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 function NoteList() {
   const [notes, setNotes] = useState([]);
   const [showTextModal, setShowTextModal] = useState(false);
@@ -52,10 +53,6 @@ function NoteList() {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true,
                   })}
                 </span>
               </div>
