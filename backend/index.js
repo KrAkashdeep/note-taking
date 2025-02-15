@@ -9,7 +9,10 @@ require("./Models/db");
 app.use(cors());
 app.use(bodyParser.json());
 
+// Routes
+app.use("/auth", require("./Routes/AuthRoutes"));
 app.use("/tasks", require("./Routes/TaskRoutes"));
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

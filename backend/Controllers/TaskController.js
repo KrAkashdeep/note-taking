@@ -1,8 +1,8 @@
 const TaskModel = require("../Models/TaskModel");
 
 const addTask = async (req, res) => {
-  const data = req.body;
   try {
+    const data = { ...req.body, user: req.user.id };
     const newTask = new TaskModel(data);
     await newTask.save();
     res.status(201).json({ message: "Task added successfully", success: true });
@@ -13,7 +13,7 @@ const addTask = async (req, res) => {
 
 const getTask = async (req, res) => {
   try {
-    const tasks = await TaskModel.find({});
+    const tasks = await TaskModel.find({ user: req.user.id });
     res
       .status(200)
       .json({ message: "Tasks fetched successfully", success: true, tasks });
@@ -23,8 +23,14 @@ const getTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
+  const { id } = req.params;
   try {
-    const id = req.params.id;
+    const task = await TaskModel.findOne({ _id: id, user: req.user.id });
+    if (!task) {
+      return res
+        .status(404)
+        .json({ message: "Task not found", success: false });
+    }
     await TaskModel.findByIdAndDelete(id);
     res
       .status(200)

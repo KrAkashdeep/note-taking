@@ -1,24 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddTextNote from "./AddTextNote";
 import AddAudioNote from "./AddAudioNote";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { createNote, getNotes, deleteNote } from "../api";
 
 function NoteList() {
+  const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [showTextModal, setShowTextModal] = useState(false);
   const [showAudioModal, setShowAudioModal] = useState(false);
 
-  const handleAddNote = (newNote) => {
-    setNotes([...notes, newNote]);
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = async () => {
+    const response = await getNotes();
+
+    if (response.success) {
+      setNotes(response.tasks);
+    }
   };
-  const handleDelete = (index) => {
-    setNotes(notes.filter((_, i) => i !== index));
+
+  const handleAddNote = async (newNote) => {
+    const response = await createNote(newNote);
+
+    if (response.success) {
+      fetchNotes();
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const response = await deleteNote(id);
+
+    if (response.success) {
+      fetchNotes();
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold my-4 text-center">Note List</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Note List</h1>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center gap-2"
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          Logout
+        </button>
+      </div>
       <div className="flex justify-center mb-8">
         <div className="flex gap-4 bg-gray-100 p-3 rounded-lg">
           <button
@@ -37,18 +76,18 @@ function NoteList() {
       </div>
 
       <div className="space-y-4">
-        {notes.map((note, index) => (
+        {notes.map((note) => (
           <div
-            key={index}
+            key={note._id}
             className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex justify-between mb-2">
               <div className="flex justify-between w-full">
                 <span className="text-sm font-medium text-gray-500">
-                  Added via {note.type}
+                  Added via {note.addBy}
                 </span>
                 <span className="text-xs text-gray-400">
-                  {new Date(note.date).toLocaleString("en-US", {
+                  {new Date(note.addedTime).toLocaleString("en-US", {
                     weekday: "short",
                     year: "numeric",
                     month: "short",
@@ -58,11 +97,11 @@ function NoteList() {
               </div>
             </div>
             <p className="text-gray-800  text-[22px] whitespace-pre-wrap mt-2">
-              {note.content}
+              {note.description}
             </p>
 
             <button
-              onClick={() => handleDelete(index)}
+              onClick={() => handleDelete(note._id)}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
             >
               <FontAwesomeIcon icon={faTrash} />

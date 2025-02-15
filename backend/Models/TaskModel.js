@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const taskSchema = new schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   addBy: {
     type: String,
     required: true,
