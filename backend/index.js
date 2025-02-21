@@ -6,16 +6,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 require("./Models/db");
 
-app.use(
-  cors({
-    origin: "https://take-notes-chi.vercel.app/login",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  })
-);
+app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
