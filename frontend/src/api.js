@@ -1,5 +1,5 @@
 import axios from "axios";
-const api_url = "https://note-taking-backend-theta.vercel.app";
+const api_url = "https://note-taking-backend-three.vercel.app";
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
