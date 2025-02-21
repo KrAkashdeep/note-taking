@@ -6,7 +6,12 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 require("./Models/db");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://take-notes-eight.vercel.app",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 // Routes
